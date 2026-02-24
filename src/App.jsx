@@ -20,7 +20,7 @@ const projects = [
   {
     name: 'VintageMap',
     tagline: 'Enter a year, see global wine quality ratings by region.',
-    stack: ['React', 'Next.js', 'Tailwind'],
+    stack: ['React', 'Vite', 'Python', 'Flask'],
     status: 'Live on Railway',
     color: 'var(--color-vintage)',
     url: 'https://vintage.pyon.dev',
@@ -28,15 +28,15 @@ const projects = [
   {
     name: 'MassageOS',
     tagline: 'Massage booking with an anatomical body map. Click where it hurts.',
-    stack: ['React', 'Next.js', 'Tailwind'],
-    status: 'Live on Railway',
+    stack: ['Next.js', 'Prisma', 'TypeScript'],
+    status: 'Deploying soon',
     color: 'var(--color-massage)',
     url: 'https://massage.pyon.dev',
   },
   {
     name: 'Random Pin Cuisine',
     tagline: 'Drop a pin anywhere on Earth. Find that cuisine in NYC.',
-    stack: ['React', 'Next.js', 'Google Maps API'],
+    stack: ['React', 'Vite', 'Leaflet', 'OSM'],
     status: 'Deploying soon',
     color: 'var(--color-pin)',
     url: 'https://pin.pyon.dev',
