@@ -150,10 +150,10 @@ export default function App() {
         </p>
         <div className="max-w-lg space-y-4">
           <p className="text-text-muted text-sm leading-relaxed">
-            I work in business strategy and operations at Microsoft, focused on the Xbox and Halo ecosystem. These projects are how I stay sharp on the product side — each one solves a real problem I ran into.
+            Day job: strategy and ops at Xbox, mostly focused on Halo. These 5 projects exist because I kept running into problems I couldn't find good tools for.
           </p>
           <p className="text-text-muted text-sm leading-relaxed">
-            Based in Brooklyn. Interested in live service games, data products, and building tools that are genuinely useful.
+            Brooklyn-based. Into live service games, data products, and building things that actually work (not just look good in a screenshot).
           </p>
         </div>
 
