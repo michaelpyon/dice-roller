@@ -155,16 +155,13 @@ export default function App() {
             {!rolling && <span className="sum-value" style={{ fontSize: '2rem', fontWeight: 700, color: '#ffffff' }}>{sum}</span>}
           </div>
 
-          <div style={{ height: '2.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ height: '5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '0.25rem' }}>
             {streak > 1 && (
               <div className={`multiplier ${showCelebration ? `mult-${result}` : ''}`} style={{ margin: 0 }}>
-                <span className="mult-x">{streak}x</span>
+                <span className="mult-x" style={{ fontSize: '1.5rem' }}>{streak}x</span>
                 <span className="mult-label">STREAK</span>
               </div>
             )}
-          </div>
-
-          <div style={{ height: '2.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             {showCelebration && resultLabel && (
               <div className={`result-banner banner-${result}`} style={{ margin: 0 }}>
                 {resultLabel}
