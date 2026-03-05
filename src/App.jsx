@@ -136,50 +136,54 @@ export default function App() {
     : null
 
   return (
-    <div className={`app ${celebrationClass}`}>
+    <div className={`app ${celebrationClass}`} style={{ height: '100dvh', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
       <div className={`glow-overlay ${showCelebration ? `glow-${result}` : ''}`} />
 
       {showCelebration && <Particles type={result} />}
 
-      <div className="container">
-        <h1 className="title">Dice Roller</h1>
+      <div className="container" style={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
+        {/* Fixed top section */}
+        <div style={{ flexShrink: 0 }}>
+          <h1 className="title">Dice Roller</h1>
 
-        {streak > 1 && (
-          <div className={`multiplier ${showCelebration ? `mult-${result}` : ''}`}>
-            <span className="mult-x">{streak}x</span>
-            <span className="mult-label">STREAK</span>
+          {streak > 1 && (
+            <div className={`multiplier ${showCelebration ? `mult-${result}` : ''}`}>
+              <span className="mult-x">{streak}x</span>
+              <span className="mult-label">STREAK</span>
+            </div>
+          )}
+
+          <div className="dice-area">
+            <Die value={die1} rolling={rolling} />
+            <Die value={die2} rolling={rolling} />
           </div>
-        )}
 
-        <div className="dice-area">
-          <Die value={die1} rolling={rolling} />
-          <Die value={die2} rolling={rolling} />
+          <div className="sum-display">
+            {!rolling && <span className="sum-value">{sum}</span>}
+          </div>
+
+          {showCelebration && resultLabel && (
+            <div className={`result-banner banner-${result}`}>
+              {resultLabel}
+            </div>
+          )}
+
+          <button
+            className="roll-btn"
+            onClick={roll}
+            disabled={rolling}
+          >
+            {rolling ? 'Rolling...' : 'Roll Dice'}
+          </button>
+
+          <p className="hint">Press Space or Enter to roll</p>
         </div>
 
-        <div className="sum-display">
-          {!rolling && <span className="sum-value">{sum}</span>}
-        </div>
-
-        {showCelebration && resultLabel && (
-          <div className={`result-banner banner-${result}`}>
-            {resultLabel}
-          </div>
-        )}
-
-        <button
-          className="roll-btn"
-          onClick={roll}
-          disabled={rolling}
-        >
-          {rolling ? 'Rolling...' : 'Roll Dice'}
-        </button>
-
-        <p className="hint">Press Space or Enter to roll</p>
-
+        {/* Scrollable history fills remaining space */}
         {rollHistory.length > 0 && (
-          <div className="history">
-            <p className="history-title">History</p>
-            <div className="history-rolls" style={{ maxHeight: '160px', overflowY: 'auto' }}>
+          <div className="history" style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+            <p className="history-title" style={{ flexShrink: 0 }}>History</p>
+            <div className="history-rolls" style={{ flex: 1, overflowY: 'auto' }}>
               {[...rollHistory].reverse().map((r, i) => (
                 <div key={i} className={`history-item ${r.result ? `hist-${r.result}` : ''}`}>
                   <span className="hist-dice">{r.d1} + {r.d2}</span>
