@@ -142,8 +142,8 @@ export default function App() {
       {showCelebration && <Particles type={result} />}
 
       <div className="container" style={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
-        {/* Fixed top section */}
-        <div style={{ flexShrink: 0 }}>
+        {/* Fixed top section - centered when no history */}
+        <div style={{ flexShrink: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: rollHistory.length === 0 ? 'center' : 'flex-start', flex: rollHistory.length === 0 ? 1 : 'none' }}>
           <h1 className="title">High Roller</h1>
 
           <div className="dice-area">
@@ -177,7 +177,8 @@ export default function App() {
             {rolling ? 'Rolling...' : 'Roll Dice'}
           </button>
 
-          <p className="hint">Press Space or Enter to roll</p>
+          <p className="hint hint-touch">Tap to roll</p>
+          <p className="hint hint-desktop">Press Space or Enter to roll</p>
         </div>
 
         {/* Scrollable history fills remaining space */}

@@ -296,6 +296,12 @@ html, body {
   letter-spacing: 0.05em;
   opacity: 0.6;
 }
+.hint-touch { display: none; }
+.hint-desktop { display: block; }
+@media (pointer: coarse) {
+  .hint-touch { display: block; }
+  .hint-desktop { display: none; }
+}
 
 /* Particles */
 .particles {
