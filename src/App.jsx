@@ -2,22 +2,6 @@ import { useEffect, useRef } from 'react'
 
 const projects = [
   {
-    name: 'Air Composer',
-    tagline: 'Play a theremin and talk box with your hands using just a webcam. No installs. Runs in the browser.',
-    stack: ['TypeScript', 'MediaPipe', 'Web Audio API'],
-    status: 'Live',
-    color: 'var(--color-shooter)',
-    url: 'https://air-composer.michaelpyon.com',
-  },
-  {
-    name: 'Subway Shame',
-    tagline: 'Real-time NYC subway reliability scores. Pulls live MTA feeds, calculates a shame score per line, and tells you if your commute is about to hurt.',
-    stack: ['Python', 'Flask', 'MTA API'],
-    status: 'Live',
-    color: 'var(--color-subway)',
-    url: 'https://subway.michaelpyon.com',
-  },
-  {
     name: 'ShooterDigest',
     tagline: 'Weekly intelligence briefing for competitive FPS games. Aggregates Steam concurrents, Reddit sentiment, and press coverage into a single digestible report.',
     stack: ['Python', 'Flask', 'Steam API', 'Reddit API'],
@@ -26,28 +10,12 @@ const projects = [
     url: 'https://shooter.michaelpyon.com',
   },
   {
-    name: 'VintageMap',
-    tagline: 'Interactive wine vintage explorer. Pick a year, see quality ratings across every major wine region on a world map. Shareable URLs for any vintage.',
-    stack: ['React', 'Vite', 'Python', 'Flask'],
+    name: 'Air Composer',
+    tagline: 'Play a theremin and talk box with your hands using just a webcam. No installs. Runs in the browser.',
+    stack: ['TypeScript', 'MediaPipe', 'Web Audio API'],
     status: 'Live',
-    color: 'var(--color-vintage)',
-    url: 'https://vintage.michaelpyon.com',
-  },
-  {
-    name: 'MassageOS',
-    tagline: 'Massage booking reimagined with a 58-region anatomical body map. Clients tap where it hurts, therapists see the full picture before the session starts.',
-    stack: ['Next.js', 'Prisma', 'TypeScript'],
-    status: 'Live',
-    color: 'var(--color-massage)',
-    url: 'https://massage.michaelpyon.com',
-  },
-  {
-    name: 'Random Pin Cuisine',
-    tagline: 'Drop a pin on any spot on Earth, and find restaurants serving that region\'s cuisine in New York City. 80+ countries with local cuisine lookups.',
-    stack: ['React', 'Vite', 'Leaflet', 'OSM'],
-    status: 'Live',
-    color: 'var(--color-pin)',
-    url: 'https://random-pin.michaelpyon.com',
+    color: 'var(--color-shooter)',
+    url: 'https://air-composer.michaelpyon.com',
   },
 ]
 
