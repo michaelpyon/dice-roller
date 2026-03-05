@@ -1,173 +1,195 @@
-import { useEffect, useRef } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 
-const projects = [
-  {
-    name: 'ShooterDigest',
-    tagline: 'Weekly intelligence briefing for competitive FPS games. Aggregates Steam concurrents, Reddit sentiment, and press coverage into a single digestible report.',
-    stack: ['Python', 'Flask', 'Steam API', 'Reddit API'],
-    status: 'Live',
-    color: 'var(--color-shooter)',
-    url: 'https://shooter.michaelpyon.com',
-  },
-  {
-    name: 'Air Composer',
-    tagline: 'Play a theremin and talk box with your hands using just a webcam. No installs. Runs in the browser.',
-    stack: ['TypeScript', 'MediaPipe', 'Web Audio API'],
-    status: 'Live',
-    color: 'var(--color-shooter)',
-    url: 'https://air-composer.michaelpyon.com',
-  },
-]
+const DOT_POSITIONS = {
+  1: [[50, 50]],
+  2: [[25, 25], [75, 75]],
+  3: [[25, 25], [50, 50], [75, 75]],
+  4: [[25, 25], [75, 25], [25, 75], [75, 75]],
+  5: [[25, 25], [75, 25], [50, 50], [25, 75], [75, 75]],
+  6: [[25, 25], [75, 25], [25, 50], [75, 50], [25, 75], [75, 75]],
+}
 
-function Card({ project, index }) {
-  const ref = useRef(null)
-
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          el.classList.add('animate-fade-up')
-          el.style.animationDelay = `${400 + index * 100}ms`
-          observer.unobserve(el)
-        }
-      },
-      { threshold: 0.1 }
-    )
-    observer.observe(el)
-    return () => observer.disconnect()
-  }, [index])
-
+function Die({ value, rolling }) {
+  const dots = DOT_POSITIONS[value] || []
   return (
-    <a
-      ref={ref}
-      href={project.url}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="card-stripe block rounded-lg border border-border bg-surface pl-5 pr-6 py-5 transition-all duration-300 hover:bg-surface-hover hover:border-border-hover group"
-      style={{
-        opacity: 0,
-        '--stripe-color': project.color,
-      }}
+    <div
+      className={`die ${rolling ? 'rolling' : ''}`}
     >
-      <div className="flex items-baseline justify-between mb-2">
-        <div className="flex items-baseline gap-3">
-          <span className="text-text-subtle text-xs font-mono tabular-nums">
-            {String(index + 1).padStart(2, '0')}
-          </span>
-          <h2
-            className="text-base font-semibold tracking-tight sm:text-lg"
-            style={{ color: project.color }}
-          >
-            {project.name}
-          </h2>
-        </div>
-        <span
-          className="text-[10px] font-medium tracking-wide uppercase shrink-0 ml-3"
-          style={{
-            color: project.status === 'Live' ? '#22c55e' : '#525252',
-          }}
-        >
-          {project.status}
-        </span>
-      </div>
+      {dots.map(([x, y], i) => (
+        <div
+          key={i}
+          className="dot"
+          style={{ left: `${x}%`, top: `${y}%` }}
+        />
+      ))}
+    </div>
+  )
+}
 
-      <p className="text-text-muted text-sm leading-relaxed mb-4 ml-7">
-        {project.tagline}
-      </p>
-
-      <div className="flex flex-wrap gap-1.5 ml-7">
-        {project.stack.map((tech) => (
-          <span
-            key={tech}
-            className="text-[10px] text-text-subtle tracking-wide px-2 py-0.5 rounded border border-border"
-          >
-            {tech}
-          </span>
-        ))}
-      </div>
-    </a>
+function Particles({ type }) {
+  const count = type === 'snake-eyes' ? 40 : 20
+  return (
+    <div className="particles">
+      {Array.from({ length: count }, (_, i) => {
+        const angle = (360 / count) * i
+        const distance = 80 + Math.random() * 120
+        const size = type === 'snake-eyes' ? 4 + Math.random() * 6 : 3 + Math.random() * 4
+        const dx = Math.cos((angle * Math.PI) / 180) * distance
+        const dy = Math.sin((angle * Math.PI) / 180) * distance
+        return (
+          <div
+            key={i}
+            className={`particle particle-${type}`}
+            style={{
+              '--dx': `${dx}px`,
+              '--dy': `${dy}px`,
+              '--size': `${size}px`,
+              '--delay': `${Math.random() * 0.15}s`,
+            }}
+          />
+        )
+      })}
+    </div>
   )
 }
 
 export default function App() {
+  const [die1, setDie1] = useState(1)
+  const [die2, setDie2] = useState(2)
+  const [rolling, setRolling] = useState(false)
+  const [result, setResult] = useState(null) // 'seven-eleven', 'doubles', 'snake-eyes', null
+  const [streak, setStreak] = useState(0)
+  const [showCelebration, setShowCelebration] = useState(false)
+  const [rollHistory, setRollHistory] = useState([])
+  const timeoutRef = useRef(null)
+
+  const roll = useCallback(() => {
+    if (rolling) return
+    setRolling(true)
+    setShowCelebration(false)
+    setResult(null)
+
+    // Animate through random values
+    let ticks = 0
+    const maxTicks = 10
+    const interval = setInterval(() => {
+      setDie1(Math.ceil(Math.random() * 6))
+      setDie2(Math.ceil(Math.random() * 6))
+      ticks++
+      if (ticks >= maxTicks) {
+        clearInterval(interval)
+        const d1 = Math.ceil(Math.random() * 6)
+        const d2 = Math.ceil(Math.random() * 6)
+        setDie1(d1)
+        setDie2(d2)
+        setRolling(false)
+
+        const sum = d1 + d2
+        const isSnakeEyes = d1 === 1 && d2 === 1
+        const isDoubles = d1 === d2 && !isSnakeEyes
+        const isSevenEleven = sum === 7 || sum === 11
+
+        let newResult = null
+        if (isSnakeEyes) newResult = 'snake-eyes'
+        else if (isDoubles) newResult = 'doubles'
+        else if (isSevenEleven) newResult = 'seven-eleven'
+
+        setResult(newResult)
+        setRollHistory(prev => [...prev.slice(-19), { d1, d2, sum, result: newResult }])
+
+        if (newResult) {
+          setStreak(prev => prev + 1)
+          setShowCelebration(true)
+          if (timeoutRef.current) clearTimeout(timeoutRef.current)
+          timeoutRef.current = setTimeout(() => setShowCelebration(false), 2500)
+        } else {
+          setStreak(0)
+        }
+      }
+    }, 60)
+  }, [rolling])
+
+  useEffect(() => {
+    const handler = (e) => {
+      if (e.code === 'Space' || e.key === 'Enter') {
+        e.preventDefault()
+        roll()
+      }
+    }
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [roll])
+
+  useEffect(() => {
+    return () => { if (timeoutRef.current) clearTimeout(timeoutRef.current) }
+  }, [])
+
+  const sum = die1 + die2
+  const celebrationClass = showCelebration ? `celebration-${result}` : ''
+
+  const resultLabel = result === 'snake-eyes'
+    ? 'SNAKE EYES!'
+    : result === 'doubles'
+    ? 'DOUBLES!'
+    : result === 'seven-eleven'
+    ? sum === 7 ? 'LUCKY 7!' : 'ELEVEN!'
+    : null
+
   return (
-    <div className="min-h-screen bg-bg">
-      {/* Hero */}
-      <header className="px-6 pt-16 pb-20 max-w-2xl mx-auto sm:pt-24 sm:pb-28">
-        <h1
-          className="font-display text-5xl sm:text-7xl text-text tracking-tight leading-[0.95] mb-6 animate-fade-up"
-          style={{ animationDelay: '200ms' }}
+    <div className={`app ${celebrationClass}`}>
+      <div className={`glow-overlay ${showCelebration ? `glow-${result}` : ''}`} />
+
+      {showCelebration && <Particles type={result} />}
+
+      <div className="container">
+        <h1 className="title">Dice Roller</h1>
+
+        {streak > 1 && (
+          <div className={`multiplier ${showCelebration ? `mult-${result}` : ''}`}>
+            <span className="mult-x">{streak}x</span>
+            <span className="mult-label">STREAK</span>
+          </div>
+        )}
+
+        <div className="dice-area">
+          <Die value={die1} rolling={rolling} />
+          <Die value={die2} rolling={rolling} />
+        </div>
+
+        <div className="sum-display">
+          {!rolling && <span className="sum-value">{sum}</span>}
+        </div>
+
+        {showCelebration && resultLabel && (
+          <div className={`result-banner banner-${result}`}>
+            {resultLabel}
+          </div>
+        )}
+
+        <button
+          className="roll-btn"
+          onClick={roll}
+          disabled={rolling}
         >
-          Michael Pyon
-        </h1>
-      </header>
+          {rolling ? 'Rolling...' : 'Roll Dice'}
+        </button>
 
-      {/* Projects */}
-      <main className="px-6 max-w-2xl mx-auto">
-        <p
-          className="text-text-subtle text-xs font-mono tracking-widest uppercase mb-6 animate-fade-in"
-          style={{ animationDelay: '500ms' }}
-        >
-          Projects
-        </p>
-        <div className="grid gap-3">
-          {projects.map((project, i) => (
-            <Card key={project.name} project={project} index={i} />
-          ))}
-        </div>
-      </main>
+        <p className="hint">Press Space or Enter to roll</p>
 
-      {/* About */}
-      <section className="px-6 max-w-2xl mx-auto mt-24 mb-20">
-        <p className="text-text-subtle text-xs font-mono tracking-widest uppercase mb-6">
-          About
-        </p>
-        <div className="max-w-lg space-y-4">
-          <p className="text-text-muted text-sm leading-relaxed">
-            Strategy and ops in gaming. Building things on the side. Based in Brooklyn.
-          </p>
-        </div>
-
-        {/* Contact links */}
-        <div className="flex gap-6 mt-8">
-          <a
-            href="https://github.com/michaelpyon"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-text-subtle text-xs font-mono tracking-wide hover:text-text transition-colors"
-          >
-            GitHub
-          </a>
-          <a
-            href="https://linkedin.com/in/michaelpyon"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-text-subtle text-xs font-mono tracking-wide hover:text-text transition-colors"
-          >
-            LinkedIn
-          </a>
-          <a
-            href="mailto:michaelpyon@gmail.com"
-            className="text-text-subtle text-xs font-mono tracking-wide hover:text-text transition-colors"
-          >
-            Email
-          </a>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="px-6 pb-10 max-w-2xl mx-auto border-t border-border pt-6">
-        <div className="flex justify-between items-center">
-          <span className="text-[11px] text-text-subtle font-mono">
-            2026
-          </span>
-          <span className="text-[11px] text-text-subtle font-mono">
-            Built with React
-          </span>
-        </div>
-      </footer>
+        {rollHistory.length > 0 && (
+          <div className="history">
+            <p className="history-title">History</p>
+            <div className="history-rolls">
+              {[...rollHistory].reverse().map((r, i) => (
+                <div key={i} className={`history-item ${r.result ? `hist-${r.result}` : ''}`}>
+                  <span className="hist-dice">{r.d1} + {r.d2}</span>
+                  <span className="hist-sum">= {r.sum}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   )
 }
