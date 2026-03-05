@@ -144,7 +144,7 @@ export default function App() {
       <div className="container" style={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
         {/* Fixed top section */}
         <div style={{ flexShrink: 0 }}>
-          <h1 className="title">Dice Roller</h1>
+          <h1 className="title">High Roller</h1>
 
           <div className="dice-area">
             <Die value={die1} rolling={rolling} />
