@@ -179,7 +179,7 @@ export default function App() {
         {rollHistory.length > 0 && (
           <div className="history">
             <p className="history-title">History</p>
-            <div className="history-rolls">
+            <div className="history-rolls" style={{ maxHeight: '160px', overflowY: 'auto' }}>
               {[...rollHistory].reverse().map((r, i) => (
                 <div key={i} className={`history-item ${r.result ? `hist-${r.result}` : ''}`}>
                   <span className="hist-dice">{r.d1} + {r.d2}</span>
