@@ -146,22 +146,22 @@ export default function App() {
         <div style={{ flexShrink: 0 }}>
           <h1 className="title">Dice Roller</h1>
 
-          <div style={{ height: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            {streak > 1 && (
-              <div className={`multiplier ${showCelebration ? `mult-${result}` : ''}`} style={{ margin: 0 }}>
-                <span className="mult-x">{streak}x</span>
-                <span className="mult-label">STREAK</span>
-              </div>
-            )}
-          </div>
-
           <div className="dice-area">
             <Die value={die1} rolling={rolling} />
             <Die value={die2} rolling={rolling} />
           </div>
 
           <div className="sum-display">
-            {!rolling && <span className="sum-value">{sum}</span>}
+            {!rolling && <span className="sum-value" style={{ fontSize: '2rem', fontWeight: 700, color: '#ffffff' }}>{sum}</span>}
+          </div>
+
+          <div style={{ height: '2.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            {streak > 1 && (
+              <div className={`multiplier ${showCelebration ? `mult-${result}` : ''}`} style={{ margin: 0 }}>
+                <span className="mult-x">{streak}x</span>
+                <span className="mult-label">STREAK</span>
+              </div>
+            )}
           </div>
 
           <div style={{ height: '2.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
