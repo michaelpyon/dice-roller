@@ -158,14 +158,14 @@ export default function App() {
         </p>
         <div className="max-w-lg space-y-4">
           <p className="text-text-muted text-sm leading-relaxed">
-            Strategy at Xbox, focused on Halo. Based in Brooklyn.
+            Strategy and ops in gaming. Building things on the side. Based in Brooklyn.
           </p>
         </div>
 
         {/* Contact links */}
         <div className="flex gap-6 mt-8">
           <a
-            href="https://github.com/mpyon"
+            href="https://github.com/michaelpyon"
             target="_blank"
             rel="noopener noreferrer"
             className="text-text-subtle text-xs font-mono tracking-wide hover:text-text transition-colors"
