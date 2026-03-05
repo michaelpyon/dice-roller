@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap');
 
 * {
   margin: 0;
@@ -17,7 +17,7 @@
   --accent-doubles: #a855f7;
   --accent-snake: #ef4444;
   --accent-snake-gold: #fbbf24;
-  --font-display: 'Playfair Display', Georgia, serif;
+  --font-display: 'Oswald', system-ui, sans-serif;
 }
 
 html, body {
@@ -87,7 +87,7 @@ html, body {
 .title {
   font-size: 2rem;
   font-weight: 900;
-  font-style: italic;
+  
   letter-spacing: 0.05em;
   text-transform: uppercase;
   background: linear-gradient(180deg, #fbbf24 0%, #d97706 50%, #fbbf24 100%);
@@ -228,7 +228,7 @@ html, body {
 .result-banner {
   font-size: 1.5rem;
   font-weight: 900;
-  font-style: italic;
+  
   letter-spacing: 0.08em;
   text-transform: uppercase;
   margin-bottom: 1.5rem;
@@ -265,7 +265,7 @@ html, body {
   padding: 0.8rem 2.5rem;
   font-size: 1.1rem;
   font-weight: 900;
-  font-style: italic;
+  
   text-transform: uppercase;
   letter-spacing: 0.1em;
   border-radius: 8px;
