@@ -14,41 +14,52 @@ function Die({ value, rolling }) {
   return (
     <div
       className={`die ${rolling ? 'rolling' : ''}`}
+      role="img"
+      aria-label={rolling ? 'Die rolling' : `Die showing ${value}`}
     >
       {dots.map(([x, y], i) => (
         <div
           key={i}
           className="dot"
           style={{ left: `${x}%`, top: `${y}%` }}
+          aria-hidden="true"
         />
       ))}
     </div>
   )
 }
 
-function Particles({ type }) {
+function buildParticles(type) {
   const count = type === 'snake-eyes' ? 40 : 20
+  return Array.from({ length: count }, (_, i) => {
+    const angle = (360 / count) * i
+    const distance = 80 + Math.random() * 120
+    const size = type === 'snake-eyes' ? 4 + Math.random() * 6 : 3 + Math.random() * 4
+    const dx = Math.cos((angle * Math.PI) / 180) * distance
+    const dy = Math.sin((angle * Math.PI) / 180) * distance
+    const delay = Math.random() * 0.15
+    return { i, dx, dy, size, delay }
+  })
+}
+
+function Particles({ type }) {
+  // Lazy state init keeps Math.random outside render; particles stay stable across re-renders.
+  const [particles] = useState(() => buildParticles(type))
+
   return (
-    <div className="particles">
-      {Array.from({ length: count }, (_, i) => {
-        const angle = (360 / count) * i
-        const distance = 80 + Math.random() * 120
-        const size = type === 'snake-eyes' ? 4 + Math.random() * 6 : 3 + Math.random() * 4
-        const dx = Math.cos((angle * Math.PI) / 180) * distance
-        const dy = Math.sin((angle * Math.PI) / 180) * distance
-        return (
-          <div
-            key={i}
-            className={`particle particle-${type}`}
-            style={{
-              '--dx': `${dx}px`,
-              '--dy': `${dy}px`,
-              '--size': `${size}px`,
-              '--delay': `${Math.random() * 0.15}s`,
-            }}
-          />
-        )
-      })}
+    <div className="particles" aria-hidden="true">
+      {particles.map(({ i, dx, dy, size, delay }) => (
+        <div
+          key={i}
+          className={`particle particle-${type}`}
+          style={{
+            '--dx': `${dx}px`,
+            '--dy': `${dy}px`,
+            '--size': `${size}px`,
+            '--delay': `${delay}s`,
+          }}
+        />
+      ))}
     </div>
   )
 }
@@ -62,6 +73,7 @@ export default function App() {
   const [showCelebration, setShowCelebration] = useState(false)
   const [rollHistory, setRollHistory] = useState([])
   const timeoutRef = useRef(null)
+  const intervalRef = useRef(null)
 
   const roll = useCallback(() => {
     if (rolling) return
@@ -72,12 +84,14 @@ export default function App() {
     // Animate through random values
     let ticks = 0
     const maxTicks = 10
+    if (intervalRef.current) clearInterval(intervalRef.current)
     const interval = setInterval(() => {
       setDie1(Math.ceil(Math.random() * 6))
       setDie2(Math.ceil(Math.random() * 6))
       ticks++
       if (ticks >= maxTicks) {
         clearInterval(interval)
+        intervalRef.current = null
         const d1 = Math.ceil(Math.random() * 6)
         const d2 = Math.ceil(Math.random() * 6)
         setDie1(d1)
@@ -95,7 +109,7 @@ export default function App() {
         else if (isSevenEleven) newResult = 'seven-eleven'
 
         setResult(newResult)
-        setRollHistory(prev => [...prev.slice(-19), { d1, d2, sum, result: newResult }])
+        setRollHistory(prev => [...prev.slice(-19), { id: Date.now() + Math.random(), d1, d2, sum, result: newResult }])
 
         if (newResult) {
           setStreak(prev => prev + 1)
@@ -107,6 +121,7 @@ export default function App() {
         }
       }
     }, 60)
+    intervalRef.current = interval
   }, [rolling])
 
   useEffect(() => {
@@ -121,7 +136,10 @@ export default function App() {
   }, [roll])
 
   useEffect(() => {
-    return () => { if (timeoutRef.current) clearTimeout(timeoutRef.current) }
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current)
+      if (intervalRef.current) clearInterval(intervalRef.current)
+    }
   }, [])
 
   const sum = die1 + die2
@@ -136,8 +154,8 @@ export default function App() {
     : null
 
   return (
-    <div className={`app ${celebrationClass}`} style={{ height: '100dvh', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-      <div className={`glow-overlay ${showCelebration ? `glow-${result}` : ''}`} />
+    <main className={`app ${celebrationClass}`} style={{ height: '100dvh', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+      <div className={`glow-overlay ${showCelebration ? `glow-${result}` : ''}`} aria-hidden="true" />
 
       {showCelebration && <Particles type={result} />}
 
@@ -173,6 +191,8 @@ export default function App() {
             className="roll-btn"
             onClick={roll}
             disabled={rolling}
+            aria-label={rolling ? 'Rolling dice' : 'Roll dice'}
+            type="button"
           >
             {rolling ? 'Rolling...' : 'Roll Dice'}
           </button>
@@ -186,8 +206,8 @@ export default function App() {
           <div className="history" style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
             <p className="history-title" style={{ flexShrink: 0 }}>History</p>
             <div className="history-rolls" style={{ flex: 1, overflowY: 'auto' }}>
-              {[...rollHistory].reverse().map((r, i) => (
-                <div key={i} className={`history-item ${r.result ? `hist-${r.result}` : ''}`}>
+              {[...rollHistory].reverse().map((r) => (
+                <div key={r.id} className={`history-item ${r.result ? `hist-${r.result}` : ''}`}>
                   <span className="hist-dice">{r.d1} + {r.d2}</span>
                   <span className="hist-sum">= {r.sum}</span>
                 </div>
@@ -196,6 +216,6 @@ export default function App() {
           </div>
         )}
       </div>
-    </div>
+    </main>
   )
 }

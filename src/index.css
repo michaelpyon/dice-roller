@@ -280,11 +280,15 @@ html, body {
   transform: translateY(-1px);
   box-shadow: 0 0 20px rgba(251, 191, 36, 0.3);
 }
+.roll-btn:focus-visible {
+  outline: 2px solid #fde68a;
+  outline-offset: 3px;
+}
 .roll-btn:active:not(:disabled) {
   transform: translateY(0);
 }
 .roll-btn:disabled {
-  opacity: 0.5;
+  opacity: 0.6;
   cursor: not-allowed;
 }
 
