@@ -21,6 +21,11 @@ The ideal evangelist is a casual craps fan or board game night regular, mid-20s 
 ### og:image
 - The OG image tag points to `/og-image.png`, which does not exist in `/public`. The favicon.svg is there but no PNG thumbnail. On first Twitter/X share the card will show no image. Low urgency but visible to anyone who shares.
 
+## Shipped Wave 2 (2026-05-30)
+
+- Generated real 1200x630 branded og-image.png (Python PIL, dark background, dice showing 11, gold accent, ELEVEN! banner, streak badge). Fixes blank share cards on Twitter/X, iMessage, Discord, Slack.
+- Added Shift+S keyboard shortcut to open Twitter/X share intent when streak >= 2. Desktop hint updates contextually to show "Shift+S to share".
+
 ## Prioritized Plan
 
 ### Quick Wins (S effort, no backend, deploy needed to verify)
@@ -33,13 +38,13 @@ The ideal evangelist is a casual craps fan or board game night regular, mid-20s 
    Files: src/App.jsx, src/index.css
    Why: The single most-shareable moment in a craps toy is a long streak. Give users a one-tap share when they are already feeling lucky. Minimal, styled to match, no tracking, no backend.
 
-3. Add an og:image PNG (200x100px dice screenshot) to /public
+3. [DONE wave 2] Add og:image.png 1200x630 branded PNG to /public
    Files: public/og-image.png
-   Why: Every share or link paste on Slack, Discord, iMessage shows a blank card. A real image doubles click-through from shared links. Effort: S (generate or screenshot once). Deploy needed.
+   Why: Every share or link paste on Slack, Discord, iMessage shows a blank card. Generated with Python PIL: dark #0a0a0f background, two dice showing 6+5=11, gold accent, ELEVEN! banner, 3x streak badge, "Roll. Streak. Share." tagline.
 
-4. Keyboard shortcut for share (copy URL / tweet link when streak is up, e.g. Shift+S)
+4. [DONE wave 2] Keyboard shortcut for share (Shift+S when streak >= 2)
    Files: src/App.jsx
-   Why: Power users rolling on desktop via Space/Enter should be able to share without touching the mouse. Very low code cost.
+   Why: Power users rolling on desktop via Space/Enter can now share without touching the mouse. Desktop hint updates to show "Shift+S to share" when streak is active.
 
 5. Sound toggle: short dice click on roll, chime on lucky outcome (Web Audio API, no files)
    Files: src/App.jsx

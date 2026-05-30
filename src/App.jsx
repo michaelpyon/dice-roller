@@ -132,10 +132,14 @@ export default function App() {
         e.preventDefault()
         roll()
       }
+      if ((e.key === 'S' || e.key === 's') && e.shiftKey && streak >= 2 && !rolling) {
+        e.preventDefault()
+        window.open(buildShareUrl(streak), '_blank', 'noopener,noreferrer')
+      }
     }
     window.addEventListener('keydown', handler)
     return () => window.removeEventListener('keydown', handler)
-  }, [roll])
+  }, [roll, streak, rolling])
 
   useEffect(() => {
     return () => {
@@ -216,7 +220,7 @@ export default function App() {
           </button>
 
           <p className="hint hint-touch">Tap to roll</p>
-          <p className="hint hint-desktop">Press Space or Enter to roll</p>
+          <p className="hint hint-desktop">Space / Enter to roll{streak >= 2 ? ' · Shift+S to share' : ''}</p>
 
           {streak >= 2 && !rolling && (
             <a
