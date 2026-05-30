@@ -147,6 +147,11 @@ export default function App() {
   const sum = die1 + die2
   const celebrationClass = showCelebration ? `celebration-${result}` : ''
 
+  function buildShareUrl(streakCount) {
+    const text = `I just hit a ${streakCount}x lucky streak on High Roller! Snake eyes, doubles, and lucky 7s. Can you beat it?`
+    return `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent('https://dice-roller-self.vercel.app')}`
+  }
+
   const resultLabel = result === 'snake-eyes'
     ? 'SNAKE EYES!'
     : result === 'doubles'
@@ -212,6 +217,18 @@ export default function App() {
 
           <p className="hint hint-touch">Tap to roll</p>
           <p className="hint hint-desktop">Press Space or Enter to roll</p>
+
+          {streak >= 2 && !rolling && (
+            <a
+              className="share-streak-btn"
+              href={buildShareUrl(streak)}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`Share your ${streak}x streak on X`}
+            >
+              Share {streak}x Streak
+            </a>
+          )}
         </div>
 
         {/* Scrollable history fills remaining space */}
