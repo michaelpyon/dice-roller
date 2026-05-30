@@ -69,6 +69,7 @@ export default function App() {
   const [die2, setDie2] = useState(2)
   const [rolling, setRolling] = useState(false)
   const [result, setResult] = useState(null) // 'seven-eleven', 'doubles', 'snake-eyes', null
+  const [lastResult, setLastResult] = useState(null) // persists after celebration fades
   const [streak, setStreak] = useState(0)
   const [showCelebration, setShowCelebration] = useState(false)
   const [rollHistory, setRollHistory] = useState([])
@@ -109,6 +110,7 @@ export default function App() {
         else if (isSevenEleven) newResult = 'seven-eleven'
 
         setResult(newResult)
+        if (newResult) setLastResult(newResult)
         setRollHistory(prev => [...prev.slice(-19), { id: Date.now() + Math.random(), d1, d2, sum, result: newResult }])
 
         if (newResult) {
@@ -153,6 +155,14 @@ export default function App() {
     ? sum === 7 ? 'LUCKY 7!' : 'ELEVEN!'
     : null
 
+  const lastResultLabel = lastResult === 'snake-eyes'
+    ? 'SNAKE EYES'
+    : lastResult === 'doubles'
+    ? 'DOUBLES'
+    : lastResult === 'seven-eleven'
+    ? 'LUCKY ROLL'
+    : null
+
   return (
     <main className={`app ${celebrationClass}`} style={{ height: '100dvh', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
       <div className={`glow-overlay ${showCelebration ? `glow-${result}` : ''}`} aria-hidden="true" />
@@ -171,6 +181,9 @@ export default function App() {
 
           <div className="sum-display">
             {!rolling && <span className="sum-value" style={{ fontSize: '2rem', fontWeight: 700, color: '#ffffff' }}>{sum}</span>}
+            {!rolling && !showCelebration && lastResultLabel && (
+              <span className={`last-result-quiet last-result-${lastResult}`} aria-live="polite">{lastResultLabel}</span>
+            )}
           </div>
 
           <div style={{ height: '5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '0.25rem' }}>
